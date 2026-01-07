@@ -3,392 +3,342 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>صيدليات دواء - رعاية متكاملة</title>
+    <title>صيدليات دواء - عجلة الحظ الصحية</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --navy: #0B1E33;      /* كحلي اللوجو */
-            --teal: #00C4B4;      /* تركواز اللوجو */
-            --teal-dark: #00a89a;
+            --navy: #0B1E33;
+            --teal: #00C4B4;
             --white: #ffffff;
             --light-gray: #f8f9fa;
+            --gold: #FFD700;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Cairo', sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        body { background-color: var(--light-gray); overflow-x: hidden; }
 
-        body {
-            background-color: var(--light-gray);
-            overflow-x: hidden;
+        /* --- Intro Animation --- */
+        .intro-loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--navy); display: flex; justify-content: center; align-items: center;
+            z-index: 99999; animation: fadeOutLoader 0.5s ease-in-out 3.5s forwards;
         }
+        .capsule-container { position: relative; width: 300px; height: 100px; display: flex; justify-content: center; align-items: center; }
+        .capsule-wrapper { display: flex; position: absolute; z-index: 2; animation: spinCapsule 1.5s ease-in-out forwards; }
+        .capsule-half { width: 50px; height: 50px; }
+        .capsule-half.left { background-color: var(--white); border-radius: 25px 0 0 25px; animation: splitLeft 1.2s ease-in-out 1.5s forwards; }
+        .capsule-half.right { background-color: var(--teal); border-radius: 0 25px 25px 0; animation: splitRight 1.2s ease-in-out 1.5s forwards; }
+        .dawa-text { position: absolute; color: var(--white); font-size: 1.8rem; font-weight: 900; opacity: 0; white-space: nowrap; z-index: 1; animation: revealText 1s ease-in-out 2s forwards; }
 
-        /* --- Animations --- */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+        @keyframes spinCapsule { 0% { transform: rotate(0deg) scale(0.5); opacity: 0; } 50% { opacity: 1; } 100% { transform: rotate(720deg) scale(1.2); } }
+        @keyframes splitLeft { to { transform: translateX(-110px); } }
+        @keyframes splitRight { to { transform: translateX(110px); } }
+        @keyframes revealText { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
+        @keyframes fadeOutLoader { to { opacity: 0; visibility: hidden; } }
 
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
-        }
-
-        @keyframes bgPulse {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* --- Header --- */
-        header {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 1rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: var(--navy);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo i {
-            color: var(--teal);
-        }
-
-        .social-icons a {
-            text-decoration: none;
-            margin-left: 10px;
-            font-size: 1.5rem;
-            transition: 0.3s;
-        }
-
-        .fa-facebook { color: #1877F2; }
-        .fa-whatsapp { color: #25D366; }
+        /* --- Header & Hero --- */
+        header { background: rgba(255, 255, 255, 0.95); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.05); backdrop-filter: blur(5px); }
+        .logo { font-size: 1.5rem; font-weight: 900; color: var(--navy); display: flex; align-items: center; gap: 8px; }
+        .logo i { color: var(--teal); }
         
-        .social-icons a:hover {
-            transform: scale(1.2);
+        .hero { background: linear-gradient(135deg, var(--navy), #0f2a4a); color: var(--white); padding: 80px 20px; text-align: center; border-bottom-left-radius: 60px; border-bottom-right-radius: 60px; }
+        .hero-content { animation: fadeInUp 1s ease-out 3.8s backwards; }
+        .hero h1 { font-size: 2.8rem; margin-bottom: 20px; }
+        
+        /* --- Wheel of Fortune Section (New) --- */
+        .wheel-section { padding: 60px 20px; text-align: center; background-color: #eef2f5; overflow: hidden; }
+        .wheel-container { position: relative; width: 320px; height: 320px; margin: 30px auto; }
+        
+        canvas { display: block; width: 100%; transform: rotate(0deg); transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99); }
+        
+        .wheel-arrow {
+            position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
+            width: 0; height: 0; 
+            border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 25px solid var(--navy);
+            z-index: 10; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
         }
 
-        /* --- Hero Section (Capsule Identity) --- */
-        .hero {
-            /* خلفية متدرجة ومتحركة */
-            background: linear-gradient(-45deg, var(--navy), #162f4d, var(--navy), #0a1520);
-            background-size: 400% 400%;
-            animation: bgPulse 15s ease infinite;
-            
-            color: var(--white);
-            min-height: 85vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
-            position: relative;
-            
-            /* الحافة السفلية منحنية بقوة مثل الكبسولة */
-            border-bottom-left-radius: 50% 100px;
-            border-bottom-right-radius: 50% 100px;
+        .spin-btn {
+            background: var(--navy); color: var(--white); border: none; padding: 15px 40px; font-size: 1.2rem;
+            font-weight: bold; border-radius: 50px; cursor: pointer; margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: 0.3s;
+        }
+        .spin-btn:hover { background: var(--teal); transform: scale(1.05); }
+        .spin-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+        /* --- Result Modal (Popup) --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: var(--white); padding: 40px; border-radius: 20px; text-align: center; max-width: 400px; width: 90%;
+            position: relative; animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            border-top: 10px solid var(--teal);
+        }
+        @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        
+        .modal-icon { font-size: 3rem; color: var(--teal); margin-bottom: 15px; }
+        .modal-title { color: var(--navy); font-size: 1.5rem; margin-bottom: 10px; }
+        .modal-text { color: #555; line-height: 1.6; margin-bottom: 25px; font-size: 1.1rem; }
+        .close-modal-btn {
+            background: var(--teal); color: var(--navy); padding: 10px 30px; border: none;
+            border-radius: 50px; cursor: pointer; font-weight: bold;
         }
 
-        /* عنصر تجميلي عائم */
-        .decoration-circle {
-            position: absolute;
-            width: 200px;
-            height: 200px;
-            background: rgba(0, 196, 180, 0.1);
-            border-radius: 50%;
-            top: 10%;
-            left: 5%;
-            animation: float 6s ease-in-out infinite;
-        }
+        /* --- Other Sections --- */
+        .section-header { text-align: center; margin-bottom: 40px; }
+        .section-header h2 { color: var(--navy); font-size: 2rem; position: relative; display: inline-block; }
+        .section-header h2::after { content: ''; display: block; width: 50%; height: 3px; background: var(--teal); margin: 5px auto; }
+        
+        .advice-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding: 0 5%; }
+        .advice-card { background: var(--white); padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); text-align: center; }
+        
+        footer { background: var(--navy); color: var(--white); text-align: center; padding: 30px; margin-top: 50px; }
+        .floating-contact { position: fixed; bottom: 30px; left: 30px; z-index: 999; display: flex; flex-direction: column; gap: 10px; }
+        .float-btn { width: 50px; height: 50px; background: #25D366; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 24px; text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
 
-        .hero-content {
-            animation: fadeInUp 1s ease-out;
-            max-width: 800px;
-            z-index: 2;
-        }
-
-        /* شكل الكبسولة للنصوص */
-        .capsule-badge {
-            background-color: rgba(0, 196, 180, 0.15);
-            color: var(--teal);
-            padding: 8px 25px;
-            border-radius: 50px;
-            font-weight: 700;
-            display: inline-block;
-            margin-bottom: 20px;
-            border: 1px solid var(--teal);
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 15px;
-            line-height: 1.2;
-        }
-
-        .hero p {
-            font-size: 1.3rem;
-            opacity: 0.9;
-            margin-bottom: 30px;
-        }
-
-        /* الأزرار بشكل كبسولات */
-        .btn-group {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 15px 40px;
-            border-radius: 50px; /* شكل الكبسولة */
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-
-        .btn-primary {
-            background-color: var(--teal);
-            color: var(--navy);
-        }
-
-        .btn-primary:hover {
-            background-color: var(--white);
-            color: var(--teal);
-            transform: translateY(-5px);
-        }
-
-        .btn-secondary {
-            background-color: transparent;
-            border: 2px solid var(--white);
-            color: var(--white);
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--white);
-            color: var(--navy);
-            transform: translateY(-5px);
-        }
-
-        /* --- Services Section --- */
-        .services {
-            padding: 80px 5%;
-            text-align: center;
-        }
-
-        .section-title {
-            color: var(--navy);
-            font-size: 2.2rem;
-            margin-bottom: 50px;
-            position: relative;
-            display: inline-block;
-        }
-
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-        }
-
-        .service-card {
-            background: var(--white);
-            padding: 40px 30px;
-            border-radius: 30px; /* زوايا ناعمة */
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            transition: 0.4s;
-            position: relative;
-            overflow: hidden;
-            border-top: 5px solid transparent;
-        }
-
-        /* تأثير عند التحويم */
-        .service-card:hover {
-            transform: translateY(-10px);
-            border-top-color: var(--teal);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        }
-
-        .icon-box {
-            width: 70px;
-            height: 70px;
-            background-color: rgba(11, 30, 51, 0.05);
-            color: var(--navy);
-            border-radius: 50%; /* دائري */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            margin: 0 auto 20px;
-            transition: 0.3s;
-        }
-
-        .service-card:hover .icon-box {
-            background-color: var(--teal);
-            color: var(--white);
-        }
-
-        .service-card h3 {
-            color: var(--navy);
-            margin-bottom: 15px;
-        }
-
-        /* --- Contact Bar (Sticky Bottom) --- */
-        .floating-contact {
-            position: fixed;
-            bottom: 30px;
-            left: 30px;
-            z-index: 999;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .float-btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 30px;
-            text-decoration: none;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            transition: 0.3s;
-        }
-
-        .float-whatsapp { background-color: #25D366; }
-        .float-facebook { background-color: #1877F2; }
-
-        .float-btn:hover {
-            transform: scale(1.1);
-        }
-
-        /* --- Footer --- */
-        footer {
-            background-color: var(--navy);
-            color: var(--white);
-            text-align: center;
-            padding: 40px 20px;
-            margin-top: 50px;
-            border-top-left-radius: 50px;
-            border-top-right-radius: 50px;
-        }
-
-        /* Media Queries */
         @media (max-width: 768px) {
-            .hero h1 { font-size: 2.5rem; }
-            .btn-group { flex-direction: column; }
-            .hero { border-bottom-left-radius: 50px; border-bottom-right-radius: 50px; }
+            .hero h1 { font-size: 2rem; }
+            .capsule-container { width: 260px; }
+            @keyframes splitLeft { to { transform: translateX(-90px); } }
+            @keyframes splitRight { to { transform: translateX(90px); } }
         }
     </style>
 </head>
 <body>
 
+    <div class="intro-loader">
+        <div class="capsule-container">
+            <div class="capsule-wrapper"><div class="capsule-half left"></div><div class="capsule-half right"></div></div>
+            <div class="dawa-text">صيدليات دواء</div>
+        </div>
+    </div>
+
     <header>
-        <div class="logo">
-            <i class="fa-solid fa-capsules"></i>
-            <div>صيدليات <span>دواء</span></div>
-        </div>
-        <div class="social-icons">
-            <a href="https://www.facebook.com" target="_blank" class="fab fa-facebook"></a>
-            <a href="https://wa.me/201010572140" target="_blank" class="fab fa-whatsapp"></a>
-        </div>
+        <div class="logo"><i class="fa-solid fa-capsules"></i> صيدليات دواء</div>
+        <a href="https://wa.me/201010572140" style="color: var(--navy); text-decoration: none; font-weight: bold;"><i class="fa-solid fa-phone"></i> 01010572140</a>
     </header>
 
     <section class="hero">
-        <div class="decoration-circle"></div>
         <div class="hero-content">
-            <span class="capsule-badge">صحتك أولوية</span>
-            <h1>كل اللي تحتاجه وأكتر</h1>
-            <p>منظومة رعاية متكاملة بين يديك.. اطلب دواءك الآن بأسهل الطرق</p>
-            
-            <div class="btn-group">
-                <a href="https://wa.me/201010572140" class="btn btn-primary">
-                    <i class="fab fa-whatsapp"></i> اطلب الآن واتساب
-                </a>
-                <a href="https://www.facebook.com" target="_blank" class="btn btn-secondary">
-                    <i class="fab fa-facebook-f"></i> تابعنا فيسبوك
-                </a>
-            </div>
+            <h1>صحتك مسؤوليتنا</h1>
+            <p>اكتشف عالم من الرعاية الصحية، النصائح، والخدمات المميزة</p>
         </div>
     </section>
 
-    <section class="services">
-        <h2 class="section-title">خدماتنا المميزة</h2>
-        
-        <div class="cards-grid">
-            <div class="service-card">
-                <div class="icon-box">
-                    <i class="fa-solid fa-pills"></i>
-                </div>
-                <h3>توفير النواقص</h3>
-                <p>نوفر لك كافة الأدوية النادرة والمستوردة بأسرع وقت ممكن.</p>
-            </div>
-
-            <div class="service-card">
-                <div class="icon-box">
-                    <i class="fa-solid fa-pump-medical"></i>
-                </div>
-                <h3>مستحضرات تجميل</h3>
-                <p>أقوى البراندات العالمية للعناية بالبشرة والشعر بأسعار تنافسية.</p>
-            </div>
-
-            <div class="service-card">
-                <div class="icon-box">
-                    <i class="fa-solid fa-truck-fast"></i>
-                </div>
-                <h3>توصيل منزلي</h3>
-                <p>خدمة توصيل سريعة وآمنة لباب بيتك (دليفري).</p>
-            </div>
+    <section class="wheel-section">
+        <div class="section-header">
+            <h2>🎡 عجلة الحظ الصحية</h2>
+            <p>لف العجلة واحصل على نصيحة طبية ذهبية!</p>
         </div>
+
+        <div class="wheel-container">
+            <div class="wheel-arrow"></div>
+            <canvas id="wheelCanvas" width="320" height="320"></canvas>
+        </div>
+        <button id="spinBtn" class="spin-btn">جرب حظك الآن</button>
     </section>
 
-    <div class="floating-contact">
-        <a href="https://www.facebook.com" target="_blank" class="float-btn float-facebook">
-            <i class="fab fa-facebook-f"></i>
-        </a>
-        <a href="https://wa.me/201010572140" target="_blank" class="float-btn float-whatsapp">
-            <i class="fab fa-whatsapp"></i>
-        </a>
+    <div class="modal-overlay" id="resultModal">
+        <div class="modal-content">
+            <div class="modal-icon"><i class="fa-solid fa-gift"></i></div>
+            <h3 class="modal-title" id="modalTitle">عنوان النصيحة</h3>
+            <p class="modal-text" id="modalText">نص النصيحة سيظهر هنا...</p>
+            <button class="close-modal-btn" onclick="closeModal()">شكراً</button>
+        </div>
     </div>
 
+    <section class="advice-section" style="padding: 50px 0;">
+        <div class="section-header"><h2>نصائح سريعة</h2></div>
+        <div class="advice-grid">
+            <div class="advice-card">
+                <i class="fa-solid fa-droplet" style="font-size: 2rem; color: var(--teal); margin-bottom:10px;"></i>
+                <h3>رطب جسمك</h3>
+                <p>شرب 3 لتر ماء يومياً يقلل الصداع ويحسن البشرة.</p>
+            </div>
+            <div class="advice-card">
+                <i class="fa-solid fa-shield-virus" style="font-size: 2rem; color: var(--teal); margin-bottom:10px;"></i>
+                <h3>فيتامين C</h3>
+                <p>الجوافة والفلفل الألوان يحتويان على فيتامين C أكثر من البرتقال.</p>
+            </div>
+            <div class="advice-card">
+                <i class="fa-solid fa-sun" style="font-size: 2rem; color: var(--teal); margin-bottom:10px;"></i>
+                <h3>واقي الشمس</h3>
+                <p>ضروري حتى في الشتاء لحماية البشرة من التجاعيد المبكرة.</p>
+            </div>
+        </div>
+    </section>
+
     <footer>
-        <h3>صيدليات دواء</h3>
-        <p style="margin-top: 10px; opacity: 0.7;">نهتم بصحتكم .. لأنكم تستحقون الأفضل</p>
-        <p style="margin-top: 20px; font-size: 0.8rem;">© 2024 جميع الحقوق محفوظة</p>
+        <p>© 2024 صيدليات دواء - صحتك أمانة</p>
     </footer>
 
+    <div class="floating-contact">
+        <a href="https://wa.me/201010572140" class="float-btn"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://facebook.com" class="float-btn" style="background:#1877F2;"><i class="fab fa-facebook-f"></i></a>
+    </div>
+
+    <script>
+        // --- 1. قاعدة بيانات النصائح الضخمة (The Huge Database) ---
+        const adviceDB = {
+            "نزلات البرد": [
+                "الراحة التامة هي نصف العلاج في نزلات البرد، لا ترهق جسمك.",
+                "المضاد الحيوي لا يعالج البرد (لأنه فيروسي)، عليك بالسوائل الدافئة.",
+                "تناول الزنك عند أول شعور بالبرد يقلل مدة المرض إلى النصف.",
+                "شوربة الدجاج ليست خرافة! هي فعلاً تقلل التهابات الجهاز التنفسي.",
+                "غرغرة الماء والملح تخفف احتقان الزور بشكل فوري."
+            ],
+            "العناية بالبشرة": [
+                "لا تنم أبداً والمكياج على وجهك، هذا يسبب شيخوخة مبكرة للبشرة.",
+                "الترطيب ليس للبشرة الجافة فقط، البشرة الدهنية تحتاج مرطب مائي (Gel).",
+                "واقي الشمس هو أهم كريم للتجاعيد، استخدمه حتى لو كنت في المنزل.",
+                "فيتامين C سيروم يعطي نضارة، لكن استخدمه ليلاً فقط لتجنب التاكسد.",
+                "حب الشباب لا يُعالج باللمس! لمس الحبوب ينشر البكتيريا."
+            ],
+            "التغذية والمناعة": [
+                "المعدة بيت الداء.. قلل السكر الأبيض لأنه يضعف المناعة فوراً.",
+                "طبق السلطة الملون (5 ألوان) يغنيك عن المكملات الغذائية.",
+                "الزبادي يحتوي على بكتيريا نافعة تعزز مناعتك وصحة قولونك.",
+                "تناول حفنة مكسرات يومياً يحمي قلبك ويعزز ذاكرتك.",
+                "البيض هو أفضل مصدر بروتين لتقوية الشعر والأظافر."
+            ],
+            "صحة الأسنان": [
+                "تغيير فرشاة الأسنان كل 3 شهور ضروري لمنع تراكم البكتيريا.",
+                "الخيط الطبي أهم من الفرشاة لتنظيف ما بين الأسنان.",
+                "رائحة الفم الكريهة غالباً سببها الجفاف، اشرب ماء أكثر.",
+                "المضمضة بالزيت (Oil Pulling) صباحاً تقلل بكتيريا الفم.",
+                "لا تغسل أسنانك مباشرة بعد شرب القهوة، انتظر 30 دقيقة."
+            ],
+            "الإسعافات الأولية": [
+                "في الحروق البسيطة، الماء الجاري الفاتر هو الحل، لا تضع ثلجاً أو معجون أسنان!",
+                "في حالة الرعاف (نزيف الأنف)، انحنِ للأمام لا للخلف.",
+                "الجروح السطحية تحتاج تنظيفاً بالماء والصابون قبل المطهر.",
+                "كمادات الثلج هي الأفضل للكدمات في أول 24 ساعة.",
+                "احتفظ دائماً بمسكن وخافض حرارة في صيدلية منزلك."
+            ],
+            "الصحة النفسية": [
+                "المشي لمدة 20 دقيقة يعادل تأثير مهدئ خفيف للأعصاب.",
+                "قلة النوم تزيد من هرمون التوتر (الكورتيزول) وتزيد الوزن.",
+                "التنفس العميق (4-7-8) يهدئ ضربات القلب فوراً.",
+                "التعرض لشمس الصباح يحسن مزاجك ويضبط ساعتك البيولوجية.",
+                "شرب القهوة بعد الـ 5 مساءً قد يدمر جودة نومك."
+            ]
+        };
+
+        // --- 2. Wheel Configuration ---
+        const sectors = [
+            { color: "#0B1E33", label: "نزلات البرد" },
+            { color: "#00C4B4", label: "العناية بالبشرة" },
+            { color: "#0B1E33", label: "التغذية والمناعة" },
+            { color: "#00C4B4", label: "صحة الأسنان" },
+            { color: "#0B1E33", label: "الإسعافات الأولية" },
+            { color: "#00C4B4", label: "الصحة النفسية" }
+        ];
+
+        const rand = (m, M) => Math.random() * (M - m) + m;
+        const tot = sectors.length;
+        const spinBtn = document.querySelector("#spinBtn");
+        const ctx = document.querySelector("#wheelCanvas").getContext("2d");
+        const dia = ctx.canvas.width;
+        const rad = dia / 2;
+        const PI = Math.PI;
+        const TAU = 2 * PI;
+        const arc = TAU / sectors.length;
+
+        const friction = 0.991; // 0.995=soft, 0.99=mid, 0.98=hard
+        let angVel = 0; // Angular velocity
+        let ang = 0; // Angle in radians
+
+        // Draw Wheel
+        function drawSector(sector, i) {
+            const ang = arc * i;
+            ctx.save();
+            // COLOR
+            ctx.beginPath();
+            ctx.fillStyle = sector.color;
+            ctx.moveTo(rad, rad);
+            ctx.arc(rad, rad, rad, ang, ang + arc);
+            ctx.lineTo(rad, rad);
+            ctx.fill();
+            // TEXT
+            ctx.translate(rad, rad);
+            ctx.rotate(ang + arc / 2);
+            ctx.textAlign = "right";
+            ctx.fillStyle = "#fff";
+            ctx.font = "bold 18px Cairo";
+            ctx.fillText(sector.label, rad - 10, 10);
+            ctx.restore();
+        }
+
+        function rotate() {
+            const sector = sectors[getIndex()];
+            ctx.canvas.style.transform = `rotate(${ang - PI / 2}rad)`;
+            spinBtn.textContent = !angVel ? "جرب حظك" : "جارِ التدوير...";
+            
+            if (angVel) {
+                // Spinning Logic
+                angVel *= friction; // Decrement velocity
+                if (angVel < 0.002) {
+                    angVel = 0;
+                    showResult(sector); // Wheel Stopped
+                }
+            }
+            ang += angVel; // Update angle
+            ang %= TAU; // Normalize
+            requestAnimationFrame(rotate);
+        }
+
+        function getIndex() {
+            return Math.floor(tot - (ang / TAU) * tot) % tot;
+        }
+
+        function showResult(sector) {
+            spinBtn.disabled = false;
+            spinBtn.style.background = "#0B1E33";
+            
+            // 1. Get Category
+            const category = sector.label;
+            // 2. Get Random Advice from Database
+            const adviceList = adviceDB[category];
+            const randomAdvice = adviceList[Math.floor(Math.random() * adviceList.length)];
+            
+            // 3. Show Modal
+            document.getElementById('modalTitle').innerText = `نصيحة: ${category}`;
+            document.getElementById('modalText').innerText = randomAdvice;
+            
+            const modal = document.getElementById('resultModal');
+            modal.style.display = 'flex';
+        }
+
+        // Initialize
+        sectors.forEach(drawSector);
+        rotate(); // Loop
+
+        // Spin Button Event
+        spinBtn.addEventListener("click", () => {
+            if (!angVel) {
+                angVel = rand(0.25, 0.45);
+                spinBtn.disabled = true;
+                spinBtn.style.background = "#ccc";
+            }
+        });
+
+        // Close Modal
+        function closeModal() {
+            document.getElementById('resultModal').style.display = 'none';
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('resultModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
 </body>
 </html>
